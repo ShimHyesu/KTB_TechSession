@@ -1,0 +1,51 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: eks-cluster
+  region: ap-northeast-2
+
+addons:
+  - name: vpc-cni
+    version: latest
+    attachPolicyARNs:
+      - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+    podIdentityAssociations:
+       - namespace: kube-system
+         serviceAccount: aws-node
+
+iam:
+  withOIDC: true
+  serviceAccounts:
+  - metadata:
+      name: aws-load-balancer-controller
+      namespace: kube-system
+    wellKnownPolicies:
+      awsLoadBalancerController: true
+
+vpc:
+  id: vpc-079046fc83a5124bd
+  subnets:
+    public:
+      ap-northeast-2a:
+        id: subnet-0b490f77eb25a4726
+      ap-northeast-2c:
+        id: subnet-0371a8f13e5880c24
+    private:
+      ap-northeast-2a:
+        id: subnet-00ea4f45dd886eabf
+      ap-northeast-2c:
+        id: subnet-02d77916f6bd1c5e7
+
+managedNodeGroups:
+  - name: eks-node-group
+    instanceType: t3.small
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    iam:
+      instanceRoleARN: arn:aws:iam::730335509885:role/eks-node-role
+    privateNetworking: true
+    labels:
+      role: worker
+    tags:
+      nodegroup-role: worker
