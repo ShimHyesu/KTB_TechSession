@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: eks-game
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: eks-game
+  name: deployment-mario
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: app-mario
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: app-mario
+    spec:
+      containers:
+      - image: pengbai/docker-supermario
+        name: app-mario
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: eks-game
+  name: service-mario
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: app-mario
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: eks-game
+  name: game-ingress
+  annotations:
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/scheme: internet-facing
+spec:
+  ingressClassName: alb
+  rules:
+  - http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: service-mario
+              port:
+                number: 8080
+

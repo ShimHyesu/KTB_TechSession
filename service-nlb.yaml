@@ -1,0 +1,45 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-echo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: deploy-websrv
+  template:
+    metadata:
+      labels:
+        app: deploy-websrv
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: websrv
+        image: k8s.gcr.io/echoserver:1.5
+        ports:
+          - containerPort: 8080
+
+---
+# NLB
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nlb-type
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing # 인터넷에서 접근 가능
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "8080" 
+    service.beta.kubernetes.io/aws-load-balancer-type: external # NLB 생성
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true" # 트래픽 분산 여부
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  loadBalancerClass: service.k8s.aws/nlb
+  selector:
+    app: deploy-websrv
+
+
