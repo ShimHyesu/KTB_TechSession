@@ -42,7 +42,9 @@ aws iam attach-role-policy --role-name eks-node-role --policy-arn arn:aws:iam::a
 ### 4. 클러스터 생성
 [eksctl 설치 가이드](https://eksctl.io/installation/)를 참고
 ```bash
-export $(cat .env | xargs) && eksctl create cluster -f eks-cluster-config.yaml
+export $(grep -v '^#' .env | xargs) # .env 파일의 환경 변수를 현재 쉘 세션에 로드
+
+envsubst < eks-cluster-config.yaml | eksctl create cluster -f - # envsubst를 사용하여 YAML 파일에서 환경 변수를 대체하고 eksctl로 클러스터를 생성
 ```
 
 <br>
