@@ -36,8 +36,9 @@ aws iam attach-role-policy --role-name eks-node-role --policy-arn arn:aws:iam::a
 ### 4. 클러스터 생성
 [eksctl 설치 가이드](https://eksctl.io/installation/)를 참고
 ```bash
-eksctl create cluster -f eks-cluster-config.yaml
+export $(cat .env | xargs) && eksctl create cluster -f eks-cluster-config.yaml
 ```
+
 <br>
 
 ### 5. OIDC를 활성화하고, eksctl update addon 명령어를 사용하여 애드온을 업데이트

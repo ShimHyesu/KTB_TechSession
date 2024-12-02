@@ -1,8 +1,10 @@
-# Terraform files
-.terraform/          # Terraform providers 및 캐시 파일
-*.tfstate            # 상태 파일
-*.tfstate.backup     # 백업 상태 파일
-.terraform.lock.hcl  # Terraform lock 파일
+# Terraform-specific
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfplan
+crash.log
 
 # OS 및 에디터별 파일
 .DS_Store            # macOS 시스템 파일
@@ -10,3 +12,5 @@ Thumbs.db            # Windows 시스템 파일
 
 # IDE 및 편집기 관련 파일
 .vscode/             # VSCode 설정 폴더
+
+# .env
