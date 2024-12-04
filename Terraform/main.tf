@@ -32,7 +32,6 @@ resource "aws_subnet" "public_a" {
   tags = {
     Name = "eks-public-a"
     "kubernetes.io/role/elb" = "1"
-    "kubernetes.io/cluster/eks-cluster" = "shared"
   }
 }
 
@@ -45,7 +44,6 @@ resource "aws_subnet" "public_c" {
   tags = {
     Name = "eks-public-c"
     "kubernetes.io/role/elb" = "1"
-    "kubernetes.io/cluster/eks-cluster" = "shared"
   }
 }
 
@@ -57,8 +55,6 @@ resource "aws_subnet" "private_a" {
 
   tags = {
     Name = "eks-private-a"
-    "kubernetes.io/role/internal-elb" = "1"
-    "kubernetes.io/cluster/eks-cluster" = "shared"
   }
 }
 
@@ -69,8 +65,6 @@ resource "aws_subnet" "private_c" {
 
   tags = {
     Name = "eks-private-c"
-    "kubernetes.io/role/internal-elb" = "1"
-    "kubernetes.io/cluster/eks-cluster" = "shared"
   }
 }
 
